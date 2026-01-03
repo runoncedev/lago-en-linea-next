@@ -231,13 +231,6 @@ export default async function Dashboard() {
                           )
                         })}
                       </div>
-                      <div className="flex gap-1 mt-1">
-                        {sensor.label.slice(-8).map((date: string, idx: number) => (
-                          <div key={idx} className="flex-1 text-[8px] text-muted-foreground text-center truncate">
-                            {date.split("-").reverse().slice(1).join("/")}
-                          </div>
-                        ))}
-                      </div>
                     </div>
                   )}
                   {/* 
