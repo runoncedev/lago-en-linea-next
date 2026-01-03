@@ -119,45 +119,52 @@ export default async function Dashboard() {
 
   return (
     <div className="flex flex-col gap-4 max-w-lg mx-auto">
-      {sensors.map((sensor) => (
-        <Card
-          key={sensor.id}
-          className={cn(sensor.isExceeded ? "border-red-500 dark:bg-red-500/15 dark:border-red-500" : "")}
-        >
-          <CardHeader>
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1 flex items-center justify-between gap-2">
-                <CardTitle>
-                  {/* <Droplet className={`h-5 w-5 ${sensor.isExceeded ? "text-destructive" : "text-primary"}`} /> */}
-                  {sensor.name}
-                </CardTitle>
-                {sensor.isExceeded && (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="h-5 w-5 text-red-500"
-                  >
-                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
-                    <path d="M12 9v4" />
-                    <path d="M12 17h.01" />
-                  </svg>
-                )}
-                {/* <CardDescription className="mt-1">{formatDate(sensor.muestras_last_fecha)}</CardDescription> */}
-              </div>
-              {/* <div className="flex items-center gap-2">
-                {sensor.isExceeded && (
-                  <AlertTriangle className="h-3 w-3" />
-                  <Badge variant="destructive" className="gap-1 h-8">
-                    Alerta
-                  </Badge>
-                )}
+      {sensors
+        .sort((a, b) => {
+          // Empty ones go to the end
+          if (!a.hasData && b.hasData) return 1
+          if (a.hasData && !b.hasData) return -1
+          // If both have data or both are empty, sort by isExceeded
+          if (a.isExceeded && !b.isExceeded) return -1
+          if (!a.isExceeded && b.isExceeded) return 1
+          return 0
+        })
+        .map((sensor) => (
+          <Card
+            key={sensor.id}
+            className={cn(
+              sensor.isExceeded ? "border-red-500 dark:bg-red-500/15 dark:border-red-500" : "",
+              !sensor.hasData ? "border-slate-400 dark:bg-yellow-400/15 dark:border-yellow-400/50" : "",
+            )}
+          >
+            <CardHeader>
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex-1 flex items-center justify-between gap-2">
+                  <CardTitle>
+                    {/* <Droplet className={`h-5 w-5 ${sensor.isExceeded ? "text-destructive" : "text-primary"}`} /> */}
+                    {sensor.name}
+                  </CardTitle>
+                  {sensor.isExceeded && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-5 w-5 text-red-500"
+                    >
+                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+                      <path d="M12 9v4" />
+                      <path d="M12 17h.01" />
+                    </svg>
+                  )}
+                  {/* <CardDescription className="mt-1">{formatDate(sensor.muestras_last_fecha)}</CardDescription> */}
+                </div>
+                {/* <div className="flex items-center gap-2">
                 {!isProduction && (
                   <Dialog>
                     <DialogTrigger asChild>
@@ -180,67 +187,77 @@ export default async function Dashboard() {
                   </Dialog>
                 )}
               </div> */}
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div>
-                <div className="flex items-baseline gap-2">
-                  <span
-                    className={`text-3xl font-bold ${sensor.isExceeded ? "text-destructive" : "text-foreground"}`}
-                  >
-                    {sensor.muestras_last}
-                  </span>
-                  <span className="text-sm text-muted-foreground">UFC/100ml</span>
-                </div>
               </div>
+            </CardHeader>
+            <CardContent>
+              {sensor.hasData && (
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-baseline gap-2">
+                      <span
+                        className={`text-3xl font-bold ${sensor.isExceeded ? "text-destructive" : "text-foreground"}`}
+                      >
+                        {sensor.muestras_last}
+                      </span>
+                      <span className="text-sm text-muted-foreground">UFC/100ml</span>
+                    </div>
+                  </div>
 
-              {sensor.muestras.length > 1 && (
-                <div className="pt-3">
-                  {/* <p className="text-xs text-muted-foreground mb-2">Últimas {sensor.muestras.length} mediciones:</p> */}
-                  <div className="flex gap-1 items-end">
-                    {sensor.muestras.slice(-8).map((value: string, idx: number) => {
-                      const actualIdx = sensor.muestras.length - 8 + idx
-                      const minValue = Math.min(...sensor.muestras.map((d: string) => Number.parseInt(d)))
-                      const maxValue = Math.max(...sensor.muestras.map((d: string) => Number.parseInt(d)))
-                      const normalizedHeight = 4 + ((Number.parseInt(value) - minValue) / (maxValue - minValue)) * 36
-                      const threshold = sensor.muestras_constant[actualIdx] || sensor.threshold
-                      const isHigh = Number.parseInt(value) > threshold
-                      const date = sensor.label[actualIdx] || ""
-                      return (
-                        <div
-                          key={idx}
-                          className={`flex-1 h-12 rounded-sm ${isHigh ? "bg-red-500" : "bg-green-500/30 dark:bg-green-300/50"}`}
-                          style={{
-                            height: `${normalizedHeight}px`,
-                          }}
-                          title={`${value} UFC/100ml\n${date}`}
-                        />
-                      )
-                    })}
-                  </div>
-                  <div className="flex gap-1 mt-1">
-                    {sensor.label.slice(-8).map((date: string, idx: number) => (
-                      <div key={idx} className="flex-1 text-[8px] text-muted-foreground text-center truncate">
-                        {date.split("-").reverse().slice(1).join("/")}
+                  {sensor.muestras.length > 1 && (
+                    <div className="pt-3">
+                      <div className="flex gap-1 items-end">
+                        {sensor.muestras.slice(-8).map((value: string, idx: number) => {
+                          const actualIdx = sensor.muestras.length - 8 + idx
+
+                          const minValue = Math.min(...sensor.muestras.map((d: string) => Number.parseInt(d)))
+                          const maxValue = Math.max(...sensor.muestras.map((d: string) => Number.parseInt(d)))
+
+                          const normalizedHeight = 4 + ((Number.parseInt(value) - minValue) / (maxValue - minValue)) * 36
+
+                          const threshold = sensor.muestras_constant[actualIdx] || sensor.threshold
+                          const isHigh = Number.parseInt(value) > threshold
+
+                          const date = sensor.label[actualIdx] || ""
+
+                          return (
+                            <div
+                              key={idx}
+                              className={`flex-1 h-12 rounded-sm ${isHigh ? "bg-red-500" : "bg-green-500/30 dark:bg-green-300/50"}`}
+                              style={{
+                                height: `${normalizedHeight}px`,
+                              }}
+                              title={`${value} UFC/100ml\n${date}`}
+                            />
+                          )
+                        })}
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex gap-1 mt-1">
+                        {sensor.label.slice(-8).map((date: string, idx: number) => (
+                          <div key={idx} className="flex-1 text-[8px] text-muted-foreground text-center truncate">
+                            {date.split("-").reverse().slice(1).join("/")}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {/* 
+                <Button
+                  variant="outline"
+                  className="w-full mt-2 bg-transparent"
+                  onClick={() => handleOpenSensorDetail(sensor.id)}
+                >
+                  <Maximize2 className="h-4 w-4 mr-2" />
+                  Ver Detalles
+                </Button> */}
                 </div>
               )}
-              {/* 
-              <Button
-                variant="outline"
-                className="w-full mt-2 bg-transparent"
-                onClick={() => handleOpenSensorDetail(sensor.id)}
-              >
-                <Maximize2 className="h-4 w-4 mr-2" />
-                Ver Detalles
-              </Button> */}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+
+              {!sensor.hasData && (
+                <p className="text-slate-400">No hay datos disponibles</p>
+              )}
+            </CardContent>
+          </Card>
+        ))}
     </div>
   );
 }
