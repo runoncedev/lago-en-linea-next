@@ -133,6 +133,7 @@ export default async function Dashboard() {
           <Card
             key={sensor.id}
             className={cn(
+              "flex flex-col gap-2",
               sensor.isExceeded ? "border-red-500 dark:bg-red-500/15 dark:border-red-500" : "",
               !sensor.hasData ? "border-slate-400 dark:bg-yellow-400/15 dark:border-yellow-400/50" : "",
             )}
@@ -142,26 +143,73 @@ export default async function Dashboard() {
                 <div className="flex-1 flex items-center justify-between gap-2">
                   <CardTitle>
                     {/* <Droplet className={`h-5 w-5 ${sensor.isExceeded ? "text-destructive" : "text-primary"}`} /> */}
-                    {sensor.name}
+                    {sensor.hasData ? (
+                      <a href="#" className="flex items-center gap-2">
+                        {sensor.name}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-5 w-5 text-slate-500"
+                        >
+                          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                        </svg>
+                      </a>
+                    ) : (
+                      <span>{sensor.name}</span>
+                    )}
                   </CardTitle>
-                  {sensor.isExceeded && (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="h-5 w-5 text-red-500"
+                  <div className="flex items-center gap-2">
+                    {sensor.isExceeded && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="h-6 w-6 text-red-500"
+                      >
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+                        <path d="M12 9v4" />
+                        <path d="M12 17h.01" />
+                      </svg>
+                    )}
+                    {/* <a
+                      href="#"
+                      className={`flex items-center gap-2 place-self-end py-2 px-4 rounded-md text-center text-slate-200 ${sensor.isExceeded ? "bg-red-900" : "dark:bg-slate-700 bg-slate-500"}`}
                     >
-                      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
-                      <path d="M12 9v4" />
-                      <path d="M12 17h.01" />
-                    </svg>
-                  )}
+                      {sensor.isExceeded && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-5 w-5 "
+                        >
+                          <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
+                          <path d="M12 9v4" />
+                          <path d="M12 17h.01" />
+                        </svg>
+                      )}
+                      Ver detalles
+                    </a> */}
+                  </div>
                   {/* <CardDescription className="mt-1">{formatDate(sensor.muestras_last_fecha)}</CardDescription> */}
                 </div>
                 {/* <div className="flex items-center gap-2">
@@ -233,24 +281,28 @@ export default async function Dashboard() {
                       </div>
                     </div>
                   )}
-                  {/* 
-                <Button
-                  variant="outline"
-                  className="w-full mt-2 bg-transparent"
-                  onClick={() => handleOpenSensorDetail(sensor.id)}
-                >
-                  <Maximize2 className="h-4 w-4 mr-2" />
-                  Ver Detalles
-                </Button> */}
                 </div>
               )}
 
               {!sensor.hasData && (
-                <p className="text-slate-400">No hay datos disponibles</p>
+                <p className="dark:text-slate-400 text-slate-500">No hay datos disponibles</p>
               )}
             </CardContent>
+            {/* {sensor.hasData && (
+              <CardFooter className="px-2">
+                <CardAction>
+                  <a
+                    href="#"
+                    className={`block place-self-end py-2 px-4 rounded-md text-center text-slate-200 ${sensor.isExceeded ? "bg-red-600" : "dark:bg-slate-700 bg-slate-500"}`}
+                  >
+                    Ver detalles
+                  </a>
+                </CardAction>
+              </CardFooter>
+            )} */}
           </Card>
-        ))}
-    </div>
+        ))
+      }
+    </div >
   );
 }
