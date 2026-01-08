@@ -1,3 +1,7 @@
+import {
+  Map,
+  MapTileLayer
+} from "@/components/ui/map";
 import { SENSOR_IDS } from "@/lib/constants";
 import { fetchSensorData } from "@/lib/sensor-data";
 
@@ -24,7 +28,7 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
             })
             : null}
         </div>
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-8 pb-8">
           <div className="bg-[#212121] rounded-lg p-4 flex items-start justify-between gap-4">
             <div className="flex-1">
               <div className="text-[#9E9E9E] text-sm mb-2">Última medición</div>
@@ -147,6 +151,10 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
               </div>
             </div>
           )}
+
+          <Map center={[43.6532, -79.3832]} className="min-h-[300px]" >
+            <MapTileLayer />
+          </Map>
         </div>
       </div>
     </div>
