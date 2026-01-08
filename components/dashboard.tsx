@@ -1,111 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { SENSOR_IDS } from "@/lib/constants"
+import { fetchSensorData } from "@/lib/sensor-data"
 import { cn } from "@/lib/utils"
-
-const SENSOR_IDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-
-const SENSOR_NAMES: Record<number, string> = {
-  1: "Santa Rosa Final",
-  2: "Cerro Philippi",
-  3: "Aliviadero Santa Rosa",
-  4: "Diego Portales",
-  5: "Walker Martínez",
-  6: "Muelle",
-  7: "Hotel Radisson",
-  8: "Hotel Bellavista",
-  9: "Vicente Pérez Rosales",
-  10: "Antonio Varas",
-  11: "Eleuterio Ramírez",
-  12: "Freire",
-  13: "Aliviadero Pto. Chico",
-  14: "Quebrada Honda",
-  15: "Marina de Puerto Varas",
-  16: "Doña Ema",
-}
-
-
-async function fetchSensorData(sensorId: number) {
-  try {
-    const formData = new URLSearchParams({
-      since: "2024-12-31",
-      to: "2025-12-31",
-      sensor: sensorId.toString(),
-    })
-
-    const response = await fetch("https://www.lagoenlinea.cl/api/getMediciones.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        Accept: "*/*",
-      },
-      body: formData.toString(),
-      next: {
-        revalidate: 60 * 60 * 24, // 24 hours
-      },
-    })
-
-    if (!response.ok) {
-      return {
-        id: sensorId,
-        name: SENSOR_NAMES[sensorId] || `Sensor ${sensorId}`,
-        label: [],
-        muestras: [],
-        muestras_constant: [],
-        muestras_last: "0",
-        muestras_last_fecha: "",
-        isExceeded: false,
-        threshold: 1000,
-        hasData: false,
-        contaminatedCount: 0,
-        rawResponse: null,
-      }
-    }
-
-    const data = await response.json()
-
-    const hasData = data.muestras && data.muestras.length > 0 && data.muestras_last
-
-    const lastMeasurement = Number.parseInt(data.muestras_last || "0")
-    const threshold = data.muestras_constant?.[data.muestras_constant.length - 1] || 1000
-    const isExceeded = lastMeasurement > threshold
-
-    const contaminatedCount = (data.muestras || []).reduce((count: number, value: string, index: number) => {
-      const measurement = Number.parseInt(value)
-      const measurementThreshold = data.muestras_constant?.[index] || 1000
-      return measurement > measurementThreshold ? count + 1 : count
-    }, 0)
-
-    return {
-      id: sensorId,
-      name: SENSOR_NAMES[sensorId] || `Sensor ${sensorId}`,
-      label: data.label || [],
-      muestras: data.muestras || [],
-      muestras_constant: data.muestras_constant || [],
-      muestras_last: data.muestras_last || "0",
-      muestras_last_fecha: data.muestras_last_fecha || "",
-      isExceeded,
-      threshold,
-      hasData,
-      contaminatedCount,
-      rawResponse: data,
-    }
-  } catch (error) {
-    console.error(`Error fetching sensor ${sensorId}:`, error)
-    return {
-      id: sensorId,
-      name: SENSOR_NAMES[sensorId] || `Sensor ${sensorId}`,
-      label: [],
-      muestras: [],
-      muestras_constant: [],
-      muestras_last: "0",
-      muestras_last_fecha: "",
-      isExceeded: false,
-      threshold: 1000,
-      hasData: false,
-      contaminatedCount: 0,
-      rawResponse: null,
-    }
-  }
-}
+import Link from "next/link"
 
 export default async function Dashboard() {
 
@@ -144,7 +41,7 @@ export default async function Dashboard() {
                   <CardTitle>
                     {/* <Droplet className={`h-5 w-5 ${sensor.isExceeded ? "text-destructive" : "text-primary"}`} /> */}
                     {sensor.hasData ? (
-                      <a href="#" className="flex items-center gap-2">
+                      <Link href={`/sensor/${sensor.id}`} className="flex items-center gap-2">
                         {sensor.name}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -161,7 +58,7 @@ export default async function Dashboard() {
                           <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                           <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                         </svg>
-                      </a>
+                      </Link>
                     ) : (
                       <span>{sensor.name}</span>
                     )}
