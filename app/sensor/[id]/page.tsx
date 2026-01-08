@@ -1,5 +1,6 @@
 import {
   Map,
+  MapMarker,
   MapTileLayer
 } from "@/components/ui/map";
 import { SENSOR_IDS } from "@/lib/constants";
@@ -8,6 +9,13 @@ import { fetchSensorData } from "@/lib/sensor-data";
 export async function generateStaticParams() {
   return SENSOR_IDS.map((id) => ({ id: id.toString() }));
 }
+
+const CITIES = [
+  {
+    name: "Toronto",
+    coordinates: [43.6532, -79.3832],
+  },
+]
 
 export default async function SensorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -152,8 +160,10 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
             </div>
           )}
 
-          <Map center={[43.6532, -79.3832]} className="min-h-[300px]" >
+          <Map center={[-41.324098, -72.969830]} className="min-h-[300px] rounded-xl" >
             <MapTileLayer />
+
+            <MapMarker position={[-41.324098, -72.969830]} />
           </Map>
         </div>
       </div>
