@@ -126,10 +126,10 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
           {sensorData.muestras.length > 1 && (
             <div className="pt-3">
               <div className="flex gap-1 items-end">
-                {sensorData.muestras.slice(-8).map((value, idx) => {
+                {sensorData.muestras.slice(-8).map((value: string, idx: number) => {
                   const actualIdx = sensorData.muestras.length - 8 + idx
-                  const minValue = Math.min(...sensorData.muestras.map((d) => Number.parseInt(d)))
-                  const maxValue = Math.max(...sensorData.muestras.map((d) => Number.parseInt(d)))
+                  const minValue = Math.min(...sensorData.muestras.map((d: string) => Number.parseInt(d)))
+                  const maxValue = Math.max(...sensorData.muestras.map((d: string) => Number.parseInt(d)))
                   const normalizedHeight = 10 + ((Number.parseInt(value) - minValue) / (maxValue - minValue)) * 90
                   const threshold = sensorData.muestras_constant[actualIdx] || sensorData.threshold
                   const isHigh = Number.parseInt(value) > threshold
@@ -147,7 +147,7 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
                 })}
               </div>
               <div className="flex gap-1 mt-1">
-                {sensorData.label.slice(-8).map((date, idx) => (
+                {sensorData.label.slice(-8).map((date: string, idx: number) => (
                   <div key={idx} className="flex-1 text-xs text-slate-300 text-center truncate">
                     {/* Format date as 31-12 (day-month) */}
                     {(() => {
