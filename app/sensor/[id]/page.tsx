@@ -27,19 +27,24 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
   return (
     <div className="px-4">
       <div className="max-w-lg mx-auto">
-        <h1 className="text-4xl font-bold pt-4">{sensorData.name}</h1>
-        <div className="py-2 text-sm text-gray-500 dark:text-gray-400">
+        <h1 className="text-4xl font-bold py-4">{sensorData.name}</h1>
+        {/* <div className="py-2 text-sm text-gray-500 dark:text-gray-400">
           {sensorData.muestras_last_fecha
             ? new Date(sensorData.muestras_last_fecha).toLocaleString("es-CL", {
               dateStyle: "medium",
-              timeStyle: "short",
             })
             : null}
-        </div>
+        </div> */}
         <div className="flex flex-col gap-8 pb-8">
           <div className="bg-[#212121] rounded-lg p-4 flex items-start justify-between gap-4">
             <div className="flex-1">
-              <div className="text-[#9E9E9E] text-sm mb-2">Última medición</div>
+              <div className="text-[#9E9E9E] text-sm mb-2">
+                {sensorData.muestras_last_fecha
+                  ? new Date(sensorData.muestras_last_fecha).toLocaleString("es-CL", {
+                    dateStyle: "medium",
+                  })
+                  : null}
+              </div>
               <div className="flex items-baseline gap-2">
                 <span
                   className={`text-4xl font-bold ${sensorData.isExceeded ? "text-[#FF5252]" : "text-foreground"}`}
@@ -160,9 +165,8 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
             </div>
           )}
 
-          <Map center={[-41.324098, -72.969830]} className="min-h-[300px] rounded-xl" >
+          <Map center={[-41.324098, -72.969830]} className="min-h-[300px] rounded-xl [&_.leaflet-div-icon]:bg-transparent! [&_.leaflet-div-icon]:border-transparent!">
             <MapTileLayer />
-
             <MapMarker position={[-41.324098, -72.969830]} />
           </Map>
         </div>
