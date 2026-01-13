@@ -4,7 +4,7 @@ import {
   MapTileLayer
 } from "@/components/ui/map";
 import { SENSOR_IDS } from "@/lib/constants";
-import { fetchSensorData } from "@/lib/sensor-data";
+import fetchSensorData from "@/lib/sensor-data";
 
 export async function generateStaticParams() {
   return SENSOR_IDS.map((id) => ({ id: id.toString() }));

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { SENSOR_IDS } from "@/lib/constants"
-import { fetchSensorData } from "@/lib/sensor-data"
+import fetchSensorData from "@/lib/sensor-data"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 
