@@ -28,16 +28,15 @@ export default async function Dashboard() {
           <Card
             key={sensor.id}
             className={cn(
-              "flex flex-col gap-2",
+              "flex flex-col",
               sensor.isExceeded ? "border-red-500 dark:bg-red-500/15 dark:border-red-500" : "",
-              !sensor.hasData ? "border-slate-400 dark:bg-yellow-400/15 dark:border-yellow-400/50" : "",
+              !sensor.hasData ? "border-slate-400 dark:bg-yellow-400/15 dark:border-yellow-400/50" : "gap-2",
             )}
           >
             <CardHeader>
               <div className="flex items-start justify-between gap-2">
                 <div className="flex-1 flex items-center justify-between gap-2">
                   <CardTitle>
-                    {/* <Droplet className={`h-5 w-5 ${sensor.isExceeded ? "text-destructive" : "text-primary"}`} /> */}
                     {sensor.hasData ? (
                       <Link href={`/sensor/${sensor.id}`} className="flex items-center gap-2">
                         {sensor.name}
@@ -105,31 +104,7 @@ export default async function Dashboard() {
                       Ver detalles
                     </a> */}
                   </div>
-                  {/* <CardDescription className="mt-1">{formatDate(sensor.muestras_last_fecha)}</CardDescription> */}
                 </div>
-                {/* <div className="flex items-center gap-2">
-                {!isProduction && (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="icon" className="h-8 w-8 bg-transparent">
-                        <Bug className="h-4 w-4" />
-                        <span className="sr-only">Ver datos completos</span>
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>
-                          Datos del Sensor #{sensor.id} - {sensor.name}
-                        </DialogTitle>
-                        <DialogDescription>Respuesta completa del endpoint getMediciones</DialogDescription>
-                      </DialogHeader>
-                      <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs">
-                        {JSON.stringify(sensor.rawResponse, null, 2)}
-                      </pre>
-                    </DialogContent>
-                  </Dialog>
-                )}
-              </div> */}
               </div>
             </CardHeader>
             <CardContent>
@@ -183,18 +158,6 @@ export default async function Dashboard() {
                 <p className="dark:text-slate-400 text-slate-500">No hay datos disponibles</p>
               )}
             </CardContent>
-            {/* {sensor.hasData && (
-              <CardFooter className="px-2">
-                <CardAction>
-                  <a
-                    href="#"
-                    className={`block place-self-end py-2 px-4 rounded-md text-center text-slate-200 ${sensor.isExceeded ? "bg-red-600" : "dark:bg-slate-700 bg-slate-500"}`}
-                  >
-                    Ver detalles
-                  </a>
-                </CardAction>
-              </CardFooter>
-            )} */}
           </Card>
         ))
       }
