@@ -154,7 +154,11 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
             </div>
           )}
 
-          <Map center={mapCenter} className="min-h-[300px] rounded-xl [&_.leaflet-div-icon]:bg-transparent! [&_.leaflet-div-icon]:border-transparent!">
+          <Map
+            center={mapCenter}
+            className="min-h-[300px] rounded-xl [&_.leaflet-div-icon]:bg-transparent! [&_.leaflet-div-icon]:border-transparent!"
+            scrollWheelZoom={false}
+          >
             <MapTileLayer />
             <MapMarker position={mapCenter} />
           </Map>
