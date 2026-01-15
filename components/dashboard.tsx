@@ -12,8 +12,6 @@ export default async function Dashboard() {
 
   const sensors = await Promise.all(promises);
 
-  console.log('sensors!!', sensors);
-
   return (
     <div className="flex flex-col gap-4 max-w-lg mx-auto">
       {sensors

@@ -15,8 +15,6 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
   const sensorId = Number.parseInt(id);
   const sensorData = await fetchSensorData(sensorId);
 
-  console.log('sensorData!!', sensorData);
-
   const sensorCoordinates = SENSORS_DATA[sensorId];
   const mapCenter: [number, number] = sensorCoordinates
     ? [sensorCoordinates.lat, sensorCoordinates.lng]
