@@ -1,4 +1,4 @@
-import { SENSOR_NAMES } from "@/lib/constants";
+import { SENSORS_DATA } from "@/lib/constants";
 import { cache } from "react";
 
 async function fetchSensorData(sensorId: number) {
@@ -27,7 +27,7 @@ async function fetchSensorData(sensorId: number) {
     if (!response.ok) {
       return {
         id: sensorId,
-        name: SENSOR_NAMES[sensorId] || `Sensor ${sensorId}`,
+        name: SENSORS_DATA[sensorId]?.name || `Sensor ${sensorId}`,
         label: [],
         muestras: [],
         muestras_constant: [],
@@ -62,7 +62,7 @@ async function fetchSensorData(sensorId: number) {
 
     return {
       id: sensorId,
-      name: SENSOR_NAMES[sensorId] || `Sensor ${sensorId}`,
+      name: SENSORS_DATA[sensorId]?.name || `Sensor ${sensorId}`,
       label: data.label || [],
       muestras: data.muestras || [],
       muestras_constant: data.muestras_constant || [],
@@ -78,7 +78,7 @@ async function fetchSensorData(sensorId: number) {
     console.error(`Error fetching sensor ${sensorId}:`, error);
     return {
       id: sensorId,
-      name: SENSOR_NAMES[sensorId] || `Sensor ${sensorId}`,
+      name: SENSORS_DATA[sensorId]?.name || `Sensor ${sensorId}`,
       label: [],
       muestras: [],
       muestras_constant: [],
