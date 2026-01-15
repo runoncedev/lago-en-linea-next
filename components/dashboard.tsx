@@ -165,7 +165,7 @@ export default async function Dashboard() {
                           return (
                             <div
                               key={idx}
-                              className={`flex-1 h-12 rounded-sm ${isHigh ? "bg-red-500" : "bg-green-500/30 dark:bg-green-300/50"}`}
+                              className={`flex-1 h-12 rounded-sm ${isHigh ? "bg-red-500" : "bg-green-500 dark:bg-green-300/50"}`}
                               style={{
                                 height: `${normalizedHeight}px`,
                               }}

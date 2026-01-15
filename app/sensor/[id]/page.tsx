@@ -24,17 +24,10 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
     <div className="px-4">
       <div className="max-w-lg mx-auto">
         <h1 className="text-4xl font-bold py-4">{sensorData.name}</h1>
-        {/* <div className="py-2 text-sm text-gray-500 dark:text-gray-400">
-          {sensorData.muestras_last_fecha
-            ? new Date(sensorData.muestras_last_fecha).toLocaleString("es-CL", {
-              dateStyle: "medium",
-            })
-            : null}
-        </div> */}
         <div className="flex flex-col gap-8 pb-8">
-          <div className="bg-[#212121] rounded-lg p-4 flex items-start justify-between gap-4">
+          <div className="dark:bg-[#212121] bg-slate-200 rounded-lg p-4 flex items-start justify-between gap-4">
             <div className="flex-1">
-              <div className="text-[#9E9E9E] text-sm mb-2">
+              <div className="dark:text-[#9E9E9E] text-slate-600 text-sm mb-2">
                 {sensorData.muestras_last_fecha
                   ? new Date(sensorData.muestras_last_fecha).toLocaleString("es-CL", {
                     dateStyle: "medium",
@@ -43,11 +36,11 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
               </div>
               <div className="flex items-baseline gap-2">
                 <span
-                  className={`text-4xl font-bold ${sensorData.isExceeded ? "text-[#FF5252]" : "text-foreground"}`}
+                  className={`text-4xl font-bold ${sensorData.isExceeded ? "dark:text-[#FF5252] text-red-500" : "text-foreground"}`}
                 >
                   {sensorData.muestras_last}
                 </span>
-                <span className="text-base text-[#9E9E9E]">UFC/100ml</span>
+                <span className="text-base dark:text-[#9E9E9E] text-slate-600">UFC/100ml</span>
               </div>
             </div>
             {sensorData.isExceeded && (
@@ -61,7 +54,7 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-5 w-5 text-red-400"
+                className="h-5 w-5 dark:text-red-400 text-red-500"
               >
                 <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" />
                 <path d="M12 9v4" />
@@ -69,9 +62,9 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
               </svg>
             )}
           </div>
-          <div className="border rounded-lg border-gray-700 dark:border-gray-600 bg-gray-900/50 dark:bg-gray-800/50">
+          <div className="border rounded-lg border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-800/50">
             {sensorData.muestras && sensorData.muestras.length > 0 ? (
-              <div className="divide-y divide-gray-700 dark:divide-gray-600">
+              <div className="divide-y divide-gray-300 dark:divide-gray-600">
                 {[...sensorData.muestras].reverse().map((muestra: string, index: number) => {
                   // Calculate original index since we're reversing
                   const originalIndex = sensorData.muestras.length - 1 - index;
@@ -120,7 +113,7 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
           </div>
 
           {sensorData.muestras.length > 1 && (
-            <div className="pt-3">
+            <div>
               <div className="flex gap-1 items-end">
                 {sensorData.muestras.slice(-8).map((value: string, idx: number) => {
                   const actualIdx = sensorData.muestras.length - 8 + idx
@@ -133,7 +126,7 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
                   return (
                     <div
                       key={idx}
-                      className={`flex-1 h-12 rounded-sm ${isHigh ? "bg-red-500" : "bg-green-500/30 dark:bg-green-300/50"}`}
+                      className={`flex-1 h-12 rounded-sm ${isHigh ? "bg-red-500" : "bg-green-500 dark:bg-green-300/50"}`}
                       style={{
                         height: `${normalizedHeight}px`,
                       }}
@@ -144,7 +137,7 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
               </div>
               <div className="flex gap-1 mt-1">
                 {sensorData.label.slice(-8).map((date: string, idx: number) => (
-                  <div key={idx} className="flex-1 text-xs text-slate-300 text-center truncate">
+                  <div key={idx} className="flex-1 text-xs text-slate-600 dark:text-slate-300 text-center truncate">
                     {/* Format date as 31-12 (day-month) */}
                     {(() => {
                       const parts = date.split("-");
