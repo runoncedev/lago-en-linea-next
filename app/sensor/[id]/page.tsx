@@ -3,19 +3,12 @@ import {
   MapMarker,
   MapTileLayer
 } from "@/components/ui/map";
-import { SENSOR_IDS } from "@/lib/constants";
+import { SENSOR_IDS, SENSORS_DATA } from "@/lib/constants";
 import fetchSensorData from "@/lib/sensor-data";
 
 export async function generateStaticParams() {
   return SENSOR_IDS.map((id) => ({ id: id.toString() }));
 }
-
-const CITIES = [
-  {
-    name: "Toronto",
-    coordinates: [43.6532, -79.3832],
-  },
-]
 
 export default async function SensorPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -23,6 +16,11 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
   const sensorData = await fetchSensorData(sensorId);
 
   console.log('sensorData!!', sensorData);
+
+  const sensorCoordinates = SENSORS_DATA[sensorId];
+  const mapCenter: [number, number] = sensorCoordinates
+    ? [sensorCoordinates.lat, sensorCoordinates.lng]
+    : [-41.324098, -72.96983];
 
   return (
     <div className="px-4">
@@ -165,9 +163,9 @@ export default async function SensorPage({ params }: { params: Promise<{ id: str
             </div>
           )}
 
-          <Map center={[-41.324098, -72.969830]} className="min-h-[300px] rounded-xl [&_.leaflet-div-icon]:bg-transparent! [&_.leaflet-div-icon]:border-transparent!">
+          <Map center={mapCenter} className="min-h-[300px] rounded-xl [&_.leaflet-div-icon]:bg-transparent! [&_.leaflet-div-icon]:border-transparent!">
             <MapTileLayer />
-            <MapMarker position={[-41.324098, -72.969830]} />
+            <MapMarker position={mapCenter} />
           </Map>
         </div>
       </div>
